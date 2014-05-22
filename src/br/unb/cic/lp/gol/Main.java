@@ -7,7 +7,9 @@ public class Main {
 		
 		Statistics statistics = new Statistics();
 		
-		GameEngine engine = new GameEngine(10, 10, statistics);	
+		GameEngine engine = new GameEngine(10, 10, statistics);
+		engine.setStrategy(new HighLife(engine));
+		
 		
 		GameView board = new GameView(controller, engine);
 		

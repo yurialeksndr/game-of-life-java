@@ -20,6 +20,7 @@ public class GameEngine {
 	private int height;
 	private int width;
 	private Cell[][] cells;
+	private Strategy strategy;
 	private Statistics statistics;
 
 	/**
@@ -33,7 +34,7 @@ public class GameEngine {
 	public GameEngine(int height, int width, Statistics statistics) {
 		this.height = height;
 		this.width = width;
-
+	
 		cells = new Cell[height][width];
 
 		for (int i = 0; i < height; i++) {
@@ -62,10 +63,10 @@ public class GameEngine {
 		List<Cell> mustKill = new ArrayList<Cell>();
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
-				if (shouldRevive(i, j)) {
+				if (strategy.shouldRevive(i, j)) {
 					mustRevive.add(cells[i][j]);
 				} 
-				else if ((!shouldKeepAlive(i, j)) && cells[i][j].isAlive()) {
+				else if ((!strategy.shouldKeepAlive(i, j)) && cells[i][j].isAlive()) {
 					mustKill.add(cells[i][j]);
 				}
 			}
@@ -137,23 +138,11 @@ public class GameEngine {
 		return aliveCells;
 	}
 
-	/* verifica se uma celula deve ser mantida viva */
-	private boolean shouldKeepAlive(int i, int j) {
-		return (cells[i][j].isAlive())
-				&& (numberOfNeighborhoodAliveCells(i, j) == 2 || numberOfNeighborhoodAliveCells(i, j) == 3);
-	}
-
-	/* verifica se uma celula deve (re)nascer */
-	private boolean shouldRevive(int i, int j) {
-		return (!cells[i][j].isAlive())
-				&& (numberOfNeighborhoodAliveCells(i, j) == 3);
-	}
-
 	/*
 	 * Computa o numero de celulas vizinhas vivas, dada uma posicao no ambiente
 	 * de referencia identificada pelos argumentos (i,j).
 	 */
-	private int numberOfNeighborhoodAliveCells(int i, int j) {
+	public int numberOfNeighborhoodAliveCells(int i, int j) {
 		int alive = 0;
 		for (int a = i - 1; a <= i + 1; a++) {
 			for (int b = j - 1; b <= j + 1; b++) {
@@ -173,6 +162,9 @@ public class GameEngine {
 	}
 
 	/* Metodos de acesso as propriedades height e width */
+	public void setStrategy(Strategy strategy) {
+		this.strategy = strategy;
+	}
 	
 	public int getHeight() {
 		return height;
