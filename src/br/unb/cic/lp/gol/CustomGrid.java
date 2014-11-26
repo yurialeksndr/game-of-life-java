@@ -17,39 +17,50 @@ import javax.swing.JPanel;
 
 public class CustomGrid extends JPanel {
 	
-	private int columnCount = 10;
-    private int rowCount = 10;
+	private GameEngine engine;
+	private GameController controller;
+	
+	private int columnCount;
+    private int rowCount;
     private List<Rectangle> cells;
     private Point hoverCell;
-    private Point clickedCell;
+    //private Point clickedCell;
     private static final long serialVersionUID = 1L;
     MouseAdapter mouseMovement;
     MouseListener mouseClick;
 
     
-    public CustomGrid () {
+    public CustomGrid (GameController gameController, GameEngine gameEngine) {
     	
+    	this.engine = gameEngine;
+    	this.controller = gameController;
+    	
+    	columnCount = engine.getWidth();
+    	rowCount = engine.getHeight();
+
     	cells = new ArrayList<Rectangle>(columnCount * rowCount);
                 
     	this.configureMouseListeners();
-		
         this.addMouseMotionListener(mouseMovement);
 		this.addMouseListener(mouseClick);
         
     }
     
-    
     @Override
     public Dimension getPreferredSize() {
+    	
         return new Dimension(600, 600);
+        
     }
 
     @Override
     public void invalidate() {
+    	
         cells.clear();
         hoverCell = null;
-        clickedCell = null;
+        //clickedCell = null;
         super.invalidate();
+        
     }
 
     @Override
@@ -75,8 +86,8 @@ public class CustomGrid extends JPanel {
                 for (int col = 0; col < columnCount; col++) {
                 	
                     Rectangle cell = new Rectangle(
-                            xOffset + (col * cellWidth),
-                            yOffset + (row * cellHeight),
+                            xOffset + (row * cellHeight),
+                            yOffset + (col * cellWidth),
                             cellWidth,
                             cellHeight);
                     
@@ -89,32 +100,42 @@ public class CustomGrid extends JPanel {
         if (hoverCell != null) {
 
             int index = hoverCell.x + (hoverCell.y * columnCount);
+
             Rectangle cell = cells.get(index);
             g2d.setColor(Color.DARK_GRAY);
             g2d.fill(cell);
 
         }
         
-        if (clickedCell != null) {
+        for (int row = 0; row < rowCount; row++) {
+		
+			for (int column = 0; column < columnCount; column++) {
+			
+				int index = row + (column * columnCount);
+				Rectangle cell = cells.get(index);
+				
+				if (engine.isCellAlive(row, column)) {
+	
+					g2d.setColor(Color.YELLOW);
+					g2d.fill(cell);
+					
+				}
+				
+			}
+		}
 
-            int index = clickedCell.x + (clickedCell.y * columnCount);
-            Rectangle cell = cells.get(index);
-            g2d.setColor(Color.YELLOW);
-            g2d.fill(cell);
-            //clickedCell = null;
+        g2d.setColor(Color.BLACK);
 
-        }
-
-        g2d.setColor(Color.GRAY);
-        
         for (Rectangle cell : cells) {
+
+        	g2d.draw(cell);
         	
-            g2d.draw(cell);
-            
         }
 
         g2d.dispose();
+        
     }
+    
     
     //configureMouseListeners
     private void configureMouseListeners () {
@@ -134,7 +155,7 @@ public class CustomGrid extends JPanel {
                 int column = e.getX() / cellWidth;
                 int row = e.getY() / cellHeight;
 
-                hoverCell = new Point(column, row);
+                hoverCell = new Point(row, column);
                 repaint();
 
             }
@@ -181,8 +202,10 @@ public class CustomGrid extends JPanel {
 
                 int column = e.getX() / cellWidth;
                 int row = e.getY() / cellHeight;
+                
+                controller.makeCellAlive(row, column);
 
-                clickedCell = new Point(column, row);
+                //clickedCell = new Point(column, row);
                 repaint();
 				
 			}

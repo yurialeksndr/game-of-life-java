@@ -4,7 +4,7 @@ import java.security.InvalidParameterException;
 
 /**
  * Classe que atua como um controlador do 
- * padr‹o MVC, separando os componentes da 
+ * padrï¿½o MVC, separando os componentes da 
  * camada de apresentacao e model. 
  * 
  * @author rbonifacio
@@ -12,7 +12,7 @@ import java.security.InvalidParameterException;
 public class GameController {
 
 	private GameEngine engine;
-	private GameView board;
+	private GameViewGUI board;
 	private Statistics statistics;
 	
 	public GameEngine getEngine() {
@@ -23,11 +23,11 @@ public class GameController {
 		this.engine = engine;
 	}
 	
-	public GameView getBoard() {
+	public GameViewGUI getBoard() {
 		return board;
 	}
 	
-	public void setBoard(GameView board) {
+	public void setBoard(GameViewGUI board) {
 		this.board = board;
 	}
 	
