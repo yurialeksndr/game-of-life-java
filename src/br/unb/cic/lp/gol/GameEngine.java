@@ -17,6 +17,7 @@ import java.util.List;
  * @author rbonifacio
  */
 public class GameEngine {
+	
 	private int height;
 	private int width;
 	private Cell[][] cells;
@@ -25,12 +26,11 @@ public class GameEngine {
 	/**
 	 * Construtor da classe Environment.
 	 * 
-	 * @param height
-	 *            dimensao vertical do ambiente
-	 * @param width
-	 *            dimentsao horizontal do ambiente
+	 * @param height: dimensao vertical do ambiente
+	 * @param width: dimensao horizontal do ambiente
 	 */
-	public GameEngine(int height, int width, Statistics statistics) {
+	public GameEngine(int height, int width) {
+		
 		this.height = height;
 		this.width = width;
 
@@ -42,7 +42,8 @@ public class GameEngine {
 			}
 		}
 		
-		this.statistics = statistics;
+		this.statistics = new Statistics();
+		
 	}
 
 	/**
@@ -58,29 +59,40 @@ public class GameEngine {
 	 * c) em todos os outros casos a celula morre ou continua morta.
 	 */
 	public void nextGeneration() {
+		
 		List<Cell> mustRevive = new ArrayList<Cell>();
 		List<Cell> mustKill = new ArrayList<Cell>();
+		
 		for (int i = 0; i < height; i++) {
+			
 			for (int j = 0; j < width; j++) {
+				
 				if (shouldRevive(i, j)) {
+					
 					mustRevive.add(cells[i][j]);
 				} 
+				
 				else if ((!shouldKeepAlive(i, j)) && cells[i][j].isAlive()) {
+					
 					mustKill.add(cells[i][j]);
 				}
 			}
 		}
 		
 		for (Cell cell : mustRevive) {
+			
 			cell.revive();
 			statistics.recordRevive();
 		}
 		
 		for (Cell cell : mustKill) {
+			
 			cell.kill();
 			statistics.recordKill();
 		}
+		
 	}
+	
 	
 	/**
 	 * Torna a celula de posicao (i, j) viva
@@ -91,14 +103,20 @@ public class GameEngine {
 	 * @throws InvalidParameterException caso a posicao (i, j) nao seja valida.
 	 */
 	public void makeCellAlive(int i, int j) throws InvalidParameterException {
+		
 		if(validPosition(i, j)) {
+			
 			cells[i][j].revive();
 			statistics.recordRevive();
 		}
+		
 		else {
+			
 			new InvalidParameterException("Invalid position (" + i + ", " + j + ")" );
 		}
+		
 	}
+	
 	
 	/**
 	 * Verifica se uma celula na posicao (i, j) estah viva.
@@ -110,13 +128,18 @@ public class GameEngine {
 	 * @throws InvalidParameterException caso a posicao (i,j) nao seja valida. 
 	 */
 	public boolean isCellAlive(int i, int j) throws InvalidParameterException {
+		
 		if(validPosition(i, j)) {
-			return cells[i][j].isAlive();
+			
+			return cells[i][j].isAlive();			
 		}
+		
 		else {
+			
 			throw new InvalidParameterException("Invalid position (" + i + ", " + j + ")" );
 		}
 	}
+	
 
 	/**
 	 * Retorna o numero de celulas vivas no ambiente. 
@@ -126,42 +149,63 @@ public class GameEngine {
 	 * @return  numero de celulas vivas.
 	 */
 	public int numberOfAliveCells() {
+		
 		int aliveCells = 0;
+		
 		for(int i = 0; i < height; i++) {
+			
 			for(int j = 0; j < width; j++) {
+				
 				if(isCellAlive(i,j)) {
+					
 					aliveCells++;
+					
 				}
 			}
 		}
+		
 		return aliveCells;
 	}
+	
 
 	/* verifica se uma celula deve ser mantida viva */
 	private boolean shouldKeepAlive(int i, int j) {
+		
 		return (cells[i][j].isAlive())
 				&& (numberOfNeighborhoodAliveCells(i, j) == 2 || numberOfNeighborhoodAliveCells(i, j) == 3);
+		
 	}
+	
 
 	/* verifica se uma celula deve (re)nascer */
 	private boolean shouldRevive(int i, int j) {
+		
 		return (!cells[i][j].isAlive())
 				&& (numberOfNeighborhoodAliveCells(i, j) == 3);
+		
 	}
+	
 
 	/*
 	 * Computa o numero de celulas vizinhas vivas, dada uma posicao no ambiente
 	 * de referencia identificada pelos argumentos (i,j).
 	 */
 	private int numberOfNeighborhoodAliveCells(int i, int j) {
+		
 		int alive = 0;
+		
 		for (int a = i - 1; a <= i + 1; a++) {
+			
 			for (int b = j - 1; b <= j + 1; b++) {
+				
 				if (validPosition(a, b)  && (!(a==i && b == j)) && cells[a][b].isAlive()) {
+					
 					alive++;
+					
 				}
 			}
 		}
+		
 		return alive;
 	}
 
@@ -171,6 +215,7 @@ public class GameEngine {
 	private boolean validPosition(int a, int b) {
 		return a >= 0 && a < height && b >= 0 && b < width;
 	}
+	
 
 	/* Metodos de acesso as propriedades height e width */
 	
@@ -189,4 +234,15 @@ public class GameEngine {
 	public void setWidth(int width) {
 		this.width = width;
 	}
+	
+	
+	/*
+	 * Metodos para consultar as estatisticas
+	 */
+	public Statistics getStatistics () {
+		
+		return this.statistics;
+		
+	}
+	
 }

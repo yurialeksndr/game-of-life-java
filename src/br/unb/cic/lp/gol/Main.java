@@ -6,16 +6,14 @@ public class Main {
 				
 		GameController controller = new GameController();
 		
-		Statistics statistics = new Statistics();
-		
-		GameEngine engine = new GameEngine(10, 10, statistics);	
+		GameEngine engine = new GameEngine(10, 10);	
 		
 		GameViewGUI board = new GameViewGUI(controller, engine);
 		
 		controller.setBoard(board);
 		controller.setEngine(engine);
-		controller.setStatistics(statistics);
 		
 		controller.start();
+		
 	}
 }

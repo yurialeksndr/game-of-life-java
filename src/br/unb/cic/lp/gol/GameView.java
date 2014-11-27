@@ -1,7 +1,5 @@
 package br.unb.cic.lp.gol;
 
-import java.util.Scanner;
-
 /**
  * Atua como um componente de apresentacao (view), exibindo o estado atual do
  * game com uma implementacao baseada em caracteres ASCII.
@@ -9,17 +7,18 @@ import java.util.Scanner;
  * @author rbonifacio
  */
 public class GameView {
-	private static final String LINE = "+-----+";
-	private static final String DEAD_CELL = "|     |";
-	private static final String ALIVE_CELL = "|  o  |";
-	
-	private static final int INVALID_OPTION = 0;
-	private static final int MAKE_CELL_ALIVE = 1;
-	private static final int NEXT_GENERATION = 2;
-	private static final int HALT = 3; 
 
-	private GameEngine engine;
-	private GameController controller;
+//	private static final String LINE = "+-----+";
+//	private static final String DEAD_CELL = "|     |";
+//	private static final String ALIVE_CELL = "|  o  |";
+//	
+//	private static final int INVALID_OPTION = 0;
+//	private static final int MAKE_CELL_ALIVE = 1;
+//	private static final int NEXT_GENERATION = 2;
+//	private static final int HALT = 3; 
+//
+//	private GameEngine engine;
+//	private GameController controller;
 
 	/**
 	 * Construtor da classe GameBoard

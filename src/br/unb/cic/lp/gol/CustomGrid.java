@@ -24,7 +24,6 @@ public class CustomGrid extends JPanel {
     private int rowCount;
     private List<Rectangle> cells;
     private Point hoverCell;
-    //private Point clickedCell;
     private static final long serialVersionUID = 1L;
     MouseAdapter mouseMovement;
     MouseListener mouseClick;
@@ -49,7 +48,7 @@ public class CustomGrid extends JPanel {
     @Override
     public Dimension getPreferredSize() {
     	
-        return new Dimension(600, 600);
+        return new Dimension(300, 300);
         
     }
 
@@ -58,7 +57,6 @@ public class CustomGrid extends JPanel {
     	
         cells.clear();
         hoverCell = null;
-        //clickedCell = null;
         super.invalidate();
         
     }
@@ -144,7 +142,8 @@ public class CustomGrid extends JPanel {
         	
             @Override
             public void mouseMoved(MouseEvent e) {
-                //Point point = e.getPoint();
+                
+            	//Point point = e.getPoint();
 
                 int width = getWidth();
                 int height = getHeight();
@@ -167,32 +166,26 @@ public class CustomGrid extends JPanel {
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
 
 			}
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				System.out.println("click identificado");
 				
 				int width = getWidth();
                 int height = getHeight();
@@ -205,7 +198,6 @@ public class CustomGrid extends JPanel {
                 
                 controller.makeCellAlive(row, column);
 
-                //clickedCell = new Point(column, row);
                 repaint();
 				
 			}
