@@ -48,7 +48,7 @@ public class CustomGrid extends JPanel {
     @Override
     public Dimension getPreferredSize() {
     	
-        return new Dimension(300, 300);
+        return new Dimension(500, 500);
         
     }
 
@@ -71,11 +71,14 @@ public class CustomGrid extends JPanel {
         int width = getWidth();
         int height = getHeight();
 
-        int cellWidth = width / columnCount;
-        int cellHeight = height / rowCount;
+        int cellWidth = (int) width / columnCount;
+        int cellHeight = (int) height / rowCount;
 
-        int xOffset = (width - (columnCount * cellWidth)) / 2;
-        int yOffset = (height - (rowCount * cellHeight)) / 2;
+        //int xOffset = (width - (columnCount * cellWidth)) / 2;
+        //int yOffset = (height - (rowCount * cellHeight)) / 2;
+        
+        int xOffset = 0;
+        int yOffset = 0;
 
         if (cells.isEmpty()) {
         	

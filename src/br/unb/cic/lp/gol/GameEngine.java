@@ -6,11 +6,6 @@ import java.util.List;
 
 /**
  * Representa um ambiente (environment) do jogo GameOfLife.
- * 
- * Essa implementacao eh nao inifinita, ou seja, nem todas as celulas possuem
- * oito celulas vizinhas. Por exemplo, a celula de coordenada (0,0) possui
- * apenas tres celulas vizinhas, (0,1), (1,0) e (1,1).
- * 
  * Um ambiente eh representado como um array bidimensional de celulas, com
  * altura (height) e comprimento (width).
  * 
@@ -198,7 +193,10 @@ public class GameEngine {
 			
 			for (int b = j - 1; b <= j + 1; b++) {
 				
-				if (validPosition(a, b)  && (!(a==i && b == j)) && cells[a][b].isAlive()) {
+				int tempA = setInfiniteGridForRow(a);
+				int tempB = setInfiniteGridForColumn(b);
+				
+				if (validPosition(tempA, tempB)  && (!(tempA == i && tempB == j)) && cells[tempA][tempB].isAlive()) {
 					
 					alive++;
 					
@@ -208,12 +206,46 @@ public class GameEngine {
 		
 		return alive;
 	}
+	
+	/*
+	 * O metodo abaixo recalcula (se necessario) a vizinhanca de uma celula
+	 * para viabilizar o grid infinito
+	 */
+	private int setInfiniteGridForRow (int a) {
+		
+		if (a == -1) {			
+			a = this.height - 1;
+		}
+		
+		else if (a == this.height) {			
+			a = 0;
+		}
+		
+		return a;
+		
+	}
+	
+	private int setInfiniteGridForColumn (int b) {
+		
+		if (b == -1) {			
+			b = this.width - 1;
+		}
+		
+		else if (b == this.width) {			
+			b = 0;
+		}
+		
+		return b;
+		
+	}
 
 	/*
 	 * Verifica se uma posicao (a, b) referencia uma celula valida no tabuleiro.
 	 */
 	private boolean validPosition(int a, int b) {
+		
 		return a >= 0 && a < height && b >= 0 && b < width;
+		
 	}
 	
 
