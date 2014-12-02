@@ -3,6 +3,7 @@ package br.unb.cic.lp.gol;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Representa um ambiente (environment) do jogo GameOfLife.
@@ -11,12 +12,12 @@ import java.util.List;
  * 
  * @author rbonifacio
  */
-public class GameEngine {
+public class GameEngine extends Model {
 	
 	private int height;
 	private int width;
-	private Cell[][] cells;
-	private Statistics statistics;
+	private Stack<Cell[][]> gameHistory;
+	private Stack<Statistics> statisticsHistory;
 
 	/**
 	 * Construtor da classe Environment.
@@ -28,16 +29,21 @@ public class GameEngine {
 		
 		this.height = height;
 		this.width = width;
-
-		cells = new Cell[height][width];
-
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
-				cells[i][j] = new Cell();
-			}
-		}
 		
-		this.statistics = new Statistics();
+		//Criando a pilha que irá armazenar o histórico
+		this.gameHistory = new Stack<Cell[][]>();
+		
+		//Criando a pilha que irá armazenar o histórico de estatísticas
+		this.statisticsHistory = new Stack<Statistics>();
+		
+		//Criando a primeira matriz (vazia)
+		Cell[][] cells = new Cell[height][width];
+		createCells(cells);
+		this.gameHistory.push(cells);
+		
+		//Criando a primeira estatística (zerada)
+		Statistics statistics = new Statistics();
+		this.statisticsHistory.push(statistics);
 		
 	}
 
@@ -53,41 +59,82 @@ public class GameEngine {
 	 * 
 	 * c) em todos os outros casos a celula morre ou continua morta.
 	 */
-	public void nextGeneration() {
+	public void nextGeneration() throws Exception {
 		
-		List<Cell> mustRevive = new ArrayList<Cell>();
-		List<Cell> mustKill = new ArrayList<Cell>();
+		if (numberOfAliveCells() > 0) {
 		
-		for (int i = 0; i < height; i++) {
+			List<Cell> mustRevive = new ArrayList<Cell>();
+			List<Cell> mustKill = new ArrayList<Cell>();
 			
-			for (int j = 0; j < width; j++) {
+			Cell[][] cells = new Cell[height][width];
+			createCells(cells);
+			copyCellsFromTo(gameHistory.peek(), cells);
+			
+			Statistics statistics = new Statistics();
+							
+			for (int i = 0; i < height; i++) {
 				
-				if (shouldRevive(i, j)) {
+				for (int j = 0; j < width; j++) {
 					
-					mustRevive.add(cells[i][j]);
-				} 
-				
-				else if ((!shouldKeepAlive(i, j)) && cells[i][j].isAlive()) {
+					if (shouldRevive(i, j)) {
+						
+						mustRevive.add(cells[i][j]);
+					} 
 					
-					mustKill.add(cells[i][j]);
+					else if ((!shouldKeepAlive(i, j)) && cells[i][j].isAlive()) {
+						
+						mustKill.add(cells[i][j]);
+					}
 				}
 			}
-		}
-		
-		for (Cell cell : mustRevive) {
 			
-			cell.revive();
-			statistics.recordRevive();
-		}
-		
-		for (Cell cell : mustKill) {
+			for (Cell cell : mustRevive) {
+				
+				cell.revive();
+				statistics.recordRevive();
+
+			}
 			
-			cell.kill();
-			statistics.recordKill();
+			for (Cell cell : mustKill) {
+				
+				cell.kill();
+				statistics.recordKill();
+
+			}
+			
+			gameHistory.push(cells);
+			
+			calculateStatisticsHistory(statistics);
+			statisticsHistory.push(statistics);
+			
 		}
 		
+		else {
+			
+			throw new Exception("No more cells alive.");
+			
+		}
 	}
 	
+	/*
+	 * Método para reverter o jogo para estados anteriores.
+	 * Caso não seja possível executar o retorno, uma exceção é lançada para a controller.
+	 */
+	public void undo() throws Exception {
+		
+		if (gameHistory.size() > 1) {
+		
+			gameHistory.pop();
+			statisticsHistory.pop();
+						
+		}
+		
+		else {
+			
+			throw new Exception("No more possible undos.");
+			
+		}
+	}
 	
 	/**
 	 * Torna a celula de posicao (i, j) viva
@@ -99,15 +146,28 @@ public class GameEngine {
 	 */
 	public void makeCellAlive(int i, int j) throws InvalidParameterException {
 		
+		Cell[][] cells = new Cell[height][width];
+		createCells(cells);
+		copyCellsFromTo(gameHistory.peek(), cells);
+		
+		Statistics statistics = new Statistics();
+		
 		if(validPosition(i, j)) {
-			
+
 			cells[i][j].revive();
 			statistics.recordRevive();
+
+			gameHistory.push(cells);
+			
+			calculateStatisticsHistory(statistics);
+			statisticsHistory.push(statistics);
+			
 		}
 		
 		else {
 			
 			new InvalidParameterException("Invalid position (" + i + ", " + j + ")" );
+			
 		}
 		
 	}
@@ -126,7 +186,7 @@ public class GameEngine {
 		
 		if(validPosition(i, j)) {
 			
-			return cells[i][j].isAlive();			
+			return gameHistory.peek()[i][j].isAlive();			
 		}
 		
 		else {
@@ -144,7 +204,7 @@ public class GameEngine {
 	 * @return  numero de celulas vivas.
 	 */
 	public int numberOfAliveCells() {
-		
+
 		int aliveCells = 0;
 		
 		for(int i = 0; i < height; i++) {
@@ -165,8 +225,8 @@ public class GameEngine {
 
 	/* verifica se uma celula deve ser mantida viva */
 	private boolean shouldKeepAlive(int i, int j) {
-		
-		return (cells[i][j].isAlive())
+
+		return (gameHistory.peek()[i][j].isAlive())
 				&& (numberOfNeighborhoodAliveCells(i, j) == 2 || numberOfNeighborhoodAliveCells(i, j) == 3);
 		
 	}
@@ -174,8 +234,8 @@ public class GameEngine {
 
 	/* verifica se uma celula deve (re)nascer */
 	private boolean shouldRevive(int i, int j) {
-		
-		return (!cells[i][j].isAlive())
+
+		return (!gameHistory.peek()[i][j].isAlive())
 				&& (numberOfNeighborhoodAliveCells(i, j) == 3);
 		
 	}
@@ -186,7 +246,7 @@ public class GameEngine {
 	 * de referencia identificada pelos argumentos (i,j).
 	 */
 	private int numberOfNeighborhoodAliveCells(int i, int j) {
-		
+
 		int alive = 0;
 		
 		for (int a = i - 1; a <= i + 1; a++) {
@@ -196,7 +256,7 @@ public class GameEngine {
 				int tempA = setInfiniteGridForRow(a);
 				int tempB = setInfiniteGridForColumn(b);
 				
-				if (validPosition(tempA, tempB)  && (!(tempA == i && tempB == j)) && cells[tempA][tempB].isAlive()) {
+				if (validPosition(tempA, tempB)  && (!(tempA == i && tempB == j)) && gameHistory.peek()[tempA][tempB].isAlive()) {
 					
 					alive++;
 					
@@ -255,17 +315,17 @@ public class GameEngine {
 		return height;
 	}
 
-	public void setHeight(int height) {
-		this.height = height;
-	}
+	//public void setHeight(int height) {
+		//this.height = height;
+	//}
 
 	public int getWidth() {
 		return width;
 	}
 
-	public void setWidth(int width) {
-		this.width = width;
-	}
+	//public void setWidth(int width) {
+		//this.width = width;
+	//}
 	
 	
 	/*
@@ -273,7 +333,54 @@ public class GameEngine {
 	 */
 	public Statistics getStatistics () {
 		
-		return this.statistics;
+		return this.statisticsHistory.peek();
+		
+	}
+	
+	/*
+	 * Método para alocar as células da matriz passada
+	 */
+	private void createCells (Cell[][] cells) {
+		
+		for (int i = 0; i < height; i++) {
+			
+			for (int j = 0; j < width; j++) {
+			
+				cells[i][j] = new Cell();
+			}
+		}
+	}
+	
+	/*
+	 * Método para copiar as células de uma matriz para outra
+	 */
+	private void copyCellsFromTo (Cell[][] topOfStack, Cell[][] cells) {
+		
+		for (int i = 0; i < height; i++) {
+			
+			for (int j = 0; j < width; j++) {
+				
+				Boolean cellStatus = topOfStack[i][j].isAlive();
+				
+				if (cellStatus) {
+					
+					cells[i][j].revive(); 
+					
+				}
+				
+				else {
+					
+					cells[i][j].kill();
+					
+				}
+			}
+		}
+	}
+	
+	private void calculateStatisticsHistory (Statistics statistics) {
+		
+		statistics.setRevivedCells(statistics.getRevivedCells() + statisticsHistory.peek().getRevivedCells());
+		statistics.setKilledCells(statistics.getKilledCells() + statisticsHistory.peek().getKilledCells());
 		
 	}
 	

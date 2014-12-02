@@ -17,8 +17,10 @@ import javax.swing.JPanel;
 
 public class CustomGrid extends JPanel {
 	
-	private GameEngine engine;
-	private GameController controller;
+	private static final int GRID_DIMENSION = 500;
+	
+	private Model engine;
+	private Controller controller;
 	
 	private int columnCount;
     private int rowCount;
@@ -29,7 +31,7 @@ public class CustomGrid extends JPanel {
     MouseListener mouseClick;
 
     
-    public CustomGrid (GameController gameController, GameEngine gameEngine) {
+    public CustomGrid (Controller gameController, Model gameEngine) {
     	
     	this.engine = gameEngine;
     	this.controller = gameController;
@@ -48,7 +50,7 @@ public class CustomGrid extends JPanel {
     @Override
     public Dimension getPreferredSize() {
     	
-        return new Dimension(500, 500);
+        return new Dimension(GRID_DIMENSION, GRID_DIMENSION);
         
     }
 

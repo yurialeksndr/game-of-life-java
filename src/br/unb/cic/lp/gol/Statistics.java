@@ -22,13 +22,21 @@ public class Statistics {
 	public void recordRevive() {
 		this.revivedCells++;
 	}
-
+	
+	public void setRevivedCells (int value) {	
+		this.revivedCells = value;
+	}
+	
 	public int getKilledCells() {
 		return killedCells;
 	}
 
 	public void recordKill() {
 		this.killedCells++;
+	}
+	
+	public void setKilledCells (int value) {
+		this.killedCells = value;
 	}
 
 }
