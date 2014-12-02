@@ -119,7 +119,7 @@ public class CustomGrid extends JPanel {
 				
 				if (engine.isCellAlive(row, column)) {
 	
-					g2d.setColor(Color.YELLOW);
+					g2d.setColor(Color.ORANGE);
 					g2d.fill(cell);
 					
 				}

@@ -16,6 +16,7 @@ public class GameEngine extends Model {
 	
 	private int height;
 	private int width;
+	private Rules rule;
 	private Stack<Cell[][]> gameHistory;
 	private Stack<Statistics> statisticsHistory;
 	
@@ -25,10 +26,11 @@ public class GameEngine extends Model {
 	 * @param height: dimensao vertical do ambiente
 	 * @param width: dimensao horizontal do ambiente
 	 */
-	public GameEngine(int height, int width) {
+	public GameEngine(int height, int width, Rules rule) {
 		
 		this.height = height;
 		this.width = width;
+		this.rule = rule;
 		
 		//Criando a pilha que irá armazenar o histórico
 		this.gameHistory = new Stack<Cell[][]>();
@@ -76,12 +78,12 @@ public class GameEngine extends Model {
 				
 				for (int j = 0; j < width; j++) {
 					
-					if (shouldRevive(i, j)) {
+					if (rule.shouldRevive(i, j, this)) {
 						
 						mustRevive.add(cells[i][j]);
 					} 
 					
-					else if ((!shouldKeepAlive(i, j)) && cells[i][j].isAlive()) {
+					else if ((!rule.shouldKeepAlive(i, j, this)) && cells[i][j].isAlive()) {
 						
 						mustKill.add(cells[i][j]);
 					}
@@ -223,29 +225,11 @@ public class GameEngine extends Model {
 	}
 	
 
-	/* verifica se uma celula deve ser mantida viva */
-	private boolean shouldKeepAlive(int i, int j) {
-
-		return (gameHistory.peek()[i][j].isAlive())
-				&& (numberOfNeighborhoodAliveCells(i, j) == 2 || numberOfNeighborhoodAliveCells(i, j) == 3);
-		
-	}
-	
-
-	/* verifica se uma celula deve (re)nascer */
-	private boolean shouldRevive(int i, int j) {
-
-		return (!gameHistory.peek()[i][j].isAlive())
-				&& (numberOfNeighborhoodAliveCells(i, j) == 3);
-		
-	}
-	
-
 	/*
 	 * Computa o numero de celulas vizinhas vivas, dada uma posicao no ambiente
 	 * de referencia identificada pelos argumentos (i,j).
 	 */
-	private int numberOfNeighborhoodAliveCells(int i, int j) {
+	public int numberOfNeighborhoodAliveCells(int i, int j) {
 
 		int alive = 0;
 		
@@ -266,6 +250,7 @@ public class GameEngine extends Model {
 		
 		return alive;
 	}
+	
 	
 	/*
 	 * O metodo abaixo recalcula (se necessario) a vizinhanca de uma celula
@@ -298,6 +283,7 @@ public class GameEngine extends Model {
 		return b;
 		
 	}
+	
 
 	/*
 	 * Verifica se uma posicao (a, b) referencia uma celula valida no tabuleiro.
@@ -329,13 +315,24 @@ public class GameEngine extends Model {
 	
 	
 	/*
-	 * Metodos para consultar as estatisticas
+	 * Método para consultar o topo da pilha de estatisticas
 	 */
 	public Statistics getStatistics () {
 		
 		return this.statisticsHistory.peek();
 		
 	}
+	
+	
+	/*
+	 * Método para consultar o topo da pilha de células do jogo
+	 */
+	public Cell[][] getCurrentGameState () {
+		
+		return this.gameHistory.peek();
+		
+	}
+	
 	
 	/*
 	 * Método para alocar as células da matriz passada
@@ -350,6 +347,7 @@ public class GameEngine extends Model {
 			}
 		}
 	}
+	
 	
 	/*
 	 * Método para copiar as células de uma matriz para outra
@@ -377,6 +375,9 @@ public class GameEngine extends Model {
 		}
 	}
 	
+	/*
+	 * Método para calcular as estatísticas a serem inseridas no histórico
+	 */
 	private void calculateStatisticsHistory (Statistics statistics) {
 		
 		statistics.setRevivedCells(statistics.getRevivedCells() + statisticsHistory.peek().getRevivedCells());
