@@ -18,7 +18,7 @@ public class GameEngine extends Model {
 	private int width;
 	private Stack<Cell[][]> gameHistory;
 	private Stack<Statistics> statisticsHistory;
-
+	
 	/**
 	 * Construtor da classe Environment.
 	 * 

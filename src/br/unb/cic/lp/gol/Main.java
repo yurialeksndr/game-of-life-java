@@ -8,7 +8,9 @@ public class Main {
 		
 		GameEngine engine = new GameEngine(25, 25);
 		
-		GameViewGUI board = new GameViewGUI(controller, engine);
+		GameViewGUI board = new GameViewGUI();
+		board.setController(controller);
+		board.setEngine(engine);
 		
 		controller.setBoard(board);
 		controller.setEngine(engine);

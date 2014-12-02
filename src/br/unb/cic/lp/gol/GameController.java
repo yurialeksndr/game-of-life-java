@@ -10,37 +10,11 @@ import java.security.InvalidParameterException;
  * @author rbonifacio
  */
 public class GameController extends Controller {
-
-	private Model engine;
-	private View board;
-	
-	public Model getEngine() {
-		
-		return engine;
-		
-	}
-	
-	public void setEngine(Model engine) {
-		
-		this.engine = engine;
-		
-	}
-	
-	public View getBoard() {
-		
-		return board;
-		
-	}
-	
-	public void setBoard(View board) {
-		
-		this.board = board;
-		
-	}
 	
 	public void start() {
 		
-		board.update();
+		getBoard().createScreen();
+		getBoard().update();
 		
 	}
 	
@@ -48,8 +22,8 @@ public class GameController extends Controller {
 		
 		try {
 			
-			engine.makeCellAlive(i, j);
-			board.update();
+			getEngine().makeCellAlive(i, j);
+			getBoard().update();
 			
 		}
 		
@@ -65,44 +39,46 @@ public class GameController extends Controller {
 		
 		try {
 			
-			engine.nextGeneration();
-			board.update();
+			getEngine().nextGeneration();
+			getBoard().update();
 			
 		}
 		
 		catch (Exception e) {
 			
 			String message = "There's no cells alive!";
-			board.displayMessage(message);
+			getBoard().displayMessage(message);
 			
 		}
+		
 	}
 	
 	public void undo() {
 		
 		try {
 
-			engine.undo();
-			board.update();
+			getEngine().undo();
+			getBoard().update();
 
 		}
 		
 		catch (Exception e) {
 			
 			String message = "No more possible returns!";
-			board.displayMessage(message);
+			getBoard().displayMessage(message);
 			
 		}	
+		
 	}
 	
 	public void halt() {
 		
-		int revivedCells = engine.getStatistics().getRevivedCells();
-		int killedCells = engine.getStatistics().getKilledCells();
+		int revivedCells = getEngine().getStatistics().getRevivedCells();
+		int killedCells = getEngine().getStatistics().getKilledCells();
 		
 		String message = "Revived cells: " + revivedCells + "\nKilled cells: " + killedCells;
 		
-		board.displayMessage(message);
+		getBoard().displayMessage(message);
 		
 	}
 	

@@ -12,8 +12,6 @@ import javax.swing.JPanel;
 
 public class GameViewGUI extends View {
 	
-	private Model engine;
-	private Controller controller;
 	private CustomGrid grid;
 	
 	private JFrame frame;
@@ -21,19 +19,6 @@ public class GameViewGUI extends View {
 	private JButton nextGenerationButton;
 	private JButton undoButton;
 	private JButton haltButton;
-	
-	
-	/**
-	 * Construtor da classe GameViewGUI
-	 */
-    public GameViewGUI(Controller gameController, Model gameEngine) {
-        
-    	this.controller = gameController;
-    	this.engine = gameEngine;
-    	
-    	this.montarTela();
-    	
-    }
     
     
     /**
@@ -45,30 +30,29 @@ public class GameViewGUI extends View {
 
 	}
 	
-	
 	/**
 	 * Os metodos estao nesta classe (e nao no grid), porque
 	 * se relacionam com os eventos dos botoes
 	 */
 	private void nextGeneration() {
 		
-		controller.nextGeneration();
+		getController().nextGeneration();
 		
 	}
 	
 	private void halt() {
 		
-		controller.halt();
+		getController().halt();
 		
 	}
 	
 	private void undo() {
 		
-		controller.undo();
+		getController().undo();
 		
 	}
 	
-    private void montarTela () {
+    public void createScreen () {
     	
     	prepararJanela();
     	prepararBotaoNextGeneration();
@@ -100,7 +84,9 @@ public class GameViewGUI extends View {
 				nextGeneration();
 				
 			}
+			
 		});	  
+    	
     }
     
     private void prepararBotaoUndo () {
@@ -115,7 +101,9 @@ public class GameViewGUI extends View {
 				undo();
 				
 			}
+			
 		});
+    	
     }
     
     private void prepararBotaoHalt () {
@@ -130,12 +118,14 @@ public class GameViewGUI extends View {
 				halt();
 				
 			}
-		});	
+			
+		});
+    	
     }
     
     private void prepararGrid () {
     	
-    	this.grid = new CustomGrid(this.controller, this.engine);
+    	this.grid = new CustomGrid(getController(), getEngine());
     	grid.setBounds(0, 100, 500, 500);
     	
     }
