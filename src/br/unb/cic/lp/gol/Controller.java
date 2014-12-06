@@ -24,6 +24,7 @@ public abstract class Controller {
 		
 	}
 	
+	
 	public View getBoard() {
 		
 		return board;
@@ -35,6 +36,7 @@ public abstract class Controller {
 		this.board = board;
 		
 	}
+	
 	
 	public void setRule(Rules rule) {
 		
@@ -48,12 +50,17 @@ public abstract class Controller {
 		
 	}	
 	
+	
 	public int getHeight() {
+	
 		return engine.getHeight();
+	
 	}
 
 	public int getWidth() {
+		
 		return engine.getWidth();
+	
 	}
 	
 }

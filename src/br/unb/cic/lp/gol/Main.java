@@ -4,7 +4,9 @@ public class Main {
 
 	public static void main(String args[]) {
 		
-		String[] chosenRules = { "ConwayRules", "MazeRules" };
+		String[] chosenRules = { "ConwayRules", "MazeRules", "CoagulationsRules", "BlinkersRules", 
+				"AssimilationRules", "CoralRules", "HolsteinRules", "DayAndNightRules", "ReplicatorRules",
+				"LandRushRules", "HighLifeRules"};
 		
 		GameController controller = new GameController();
 		
