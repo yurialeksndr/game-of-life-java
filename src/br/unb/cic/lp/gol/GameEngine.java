@@ -26,11 +26,10 @@ public class GameEngine extends Model {
 	 * @param height: dimensao vertical do ambiente
 	 * @param width: dimensao horizontal do ambiente
 	 */
-	public GameEngine(int height, int width, Rules rule) {
+	public GameEngine(int height, int width) {
 		
 		this.height = height;
 		this.width = width;
-		this.rule = rule;
 		
 		//Criando a pilha que irá armazenar o histórico
 		this.gameHistory = new Stack<Cell[][]>();
@@ -81,7 +80,7 @@ public class GameEngine extends Model {
 					if (rule.shouldRevive(i, j, this)) {
 						
 						mustRevive.add(cells[i][j]);
-					} 
+					}
 					
 					else if ((!rule.shouldKeepAlive(i, j, this)) && cells[i][j].isAlive()) {
 						
@@ -295,24 +294,16 @@ public class GameEngine extends Model {
 	}
 	
 
-	/* Metodos de acesso as propriedades height e width */
-	
+	/* Métodos de acesso às propriedades height e width */
 	public int getHeight() {
 		return height;
 	}
 
-	//public void setHeight(int height) {
-		//this.height = height;
-	//}
-
+	
 	public int getWidth() {
 		return width;
 	}
 
-	//public void setWidth(int width) {
-		//this.width = width;
-	//}
-	
 	
 	/*
 	 * Método para consultar o topo da pilha de estatisticas
@@ -331,6 +322,19 @@ public class GameEngine extends Model {
 		
 		return this.gameHistory.peek();
 		
+	}
+	
+	
+	public Rules getRule() {
+		
+		return rule;
+		
+	}
+
+	public void setRule(Rules rule) {
+		
+		this.rule = rule;
+	
 	}
 	
 	

@@ -12,6 +12,8 @@ public abstract class Model {
 	public abstract int numberOfNeighborhoodAliveCells(int i, int j);
 	public abstract int getHeight();
 	public abstract int getWidth();
+	public abstract Rules getRule();
+	public abstract void setRule(Rules rule);
 	public abstract Cell[][] getCurrentGameState ();
 	public abstract Statistics getStatistics();
 	

@@ -19,7 +19,6 @@ public class CustomGrid extends JPanel {
 	
 	private static final int GRID_DIMENSION = 500;
 	
-	private Model engine;
 	private Controller controller;
 	
 	private int columnCount;
@@ -31,13 +30,12 @@ public class CustomGrid extends JPanel {
     MouseListener mouseClick;
 
     
-    public CustomGrid (Controller gameController, Model gameEngine) {
+    public CustomGrid (Controller gameController) {
     	
-    	this.engine = gameEngine;
     	this.controller = gameController;
     	
-    	columnCount = engine.getWidth();
-    	rowCount = engine.getHeight();
+    	columnCount = controller.getWidth();
+    	rowCount = controller.getHeight();
 
     	cells = new ArrayList<Rectangle>(columnCount * rowCount);
                 
@@ -117,7 +115,7 @@ public class CustomGrid extends JPanel {
 				int index = row + (column * columnCount);
 				Rectangle cell = cells.get(index);
 				
-				if (engine.isCellAlive(row, column)) {
+				if (this.controller.isCellAlive(row, column)) {
 	
 					g2d.setColor(Color.ORANGE);
 					g2d.fill(cell);
@@ -206,7 +204,9 @@ public class CustomGrid extends JPanel {
                 repaint();
 				
 			}
+			
 		};
+		
     }
     //fim configureMouseListeners
     

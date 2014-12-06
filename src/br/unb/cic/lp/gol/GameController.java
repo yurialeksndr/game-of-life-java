@@ -35,6 +35,12 @@ public class GameController extends Controller {
 		
 	}
 	
+	public boolean isCellAlive(int i, int j) {
+		
+		return getEngine().isCellAlive(i, j);
+		
+	}
+	
 	public void nextGeneration() {
 		
 		try {
@@ -80,6 +86,6 @@ public class GameController extends Controller {
 		
 		getBoard().displayMessage(message);
 		
-	}
+	}	
 	
 }

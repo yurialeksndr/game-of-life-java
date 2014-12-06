@@ -4,15 +4,15 @@ public class Main {
 
 	public static void main(String args[]) {
 		
-		Rules rule = new MazeRules();
+		String[] chosenRules = { "ConwayRules", "MazeRules" };
 		
 		GameController controller = new GameController();
 		
-		GameEngine engine = new GameEngine(50, 50, rule);
+		GameEngine engine = new GameEngine(25, 25);
 		
-		GameViewGUI board = new GameViewGUI();
+		GameViewGUI board = new GameViewGUI(chosenRules);
+		
 		board.setController(controller);
-		board.setEngine(engine);
 		
 		controller.setBoard(board);
 		controller.setEngine(engine);
@@ -20,4 +20,5 @@ public class Main {
 		controller.start();
 		
 	}
+	
 }

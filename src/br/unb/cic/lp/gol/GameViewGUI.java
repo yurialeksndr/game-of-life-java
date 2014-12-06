@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -19,7 +20,19 @@ public class GameViewGUI extends View {
 	private JButton nextGenerationButton;
 	private JButton undoButton;
 	private JButton haltButton;
-    
+	private JComboBox<String> rulesBox;
+	
+	private String[] chosenRules;
+	
+	/*
+	 * Construtor da classe
+	 */
+	public GameViewGUI (String[] chosenRules) {
+		
+		this.chosenRules = chosenRules;
+		
+	}
+	
     
     /**
 	 * Metodo para atualizar a view.
@@ -29,6 +42,7 @@ public class GameViewGUI extends View {
 		this.grid.repaint();
 
 	}
+	
 	
 	/**
 	 * Os metodos estao nesta classe (e nao no grid), porque
@@ -40,11 +54,13 @@ public class GameViewGUI extends View {
 		
 	}
 	
+	
 	private void halt() {
 		
 		getController().halt();
 		
 	}
+	
 	
 	private void undo() {
 		
@@ -52,17 +68,20 @@ public class GameViewGUI extends View {
 		
 	}
 	
+	
     public void createScreen () {
     	
     	prepararJanela();
     	prepararBotaoNextGeneration();
     	prepararBotaoUndo();
+    	prepararBoxRegras();
     	prepararBotaoHalt();
     	prepararGrid();
     	prepararPainelPrincipal();
     	mostrarJanela();
     	
     }
+    
     
     private void prepararJanela () {
     	
@@ -71,6 +90,7 @@ public class GameViewGUI extends View {
     	this.frame.setLayout(new BorderLayout());
 	    
     }
+    
     
     private void prepararBotaoNextGeneration () {
     	
@@ -89,6 +109,7 @@ public class GameViewGUI extends View {
     	
     }
     
+    
     private void prepararBotaoUndo () {
     	
     	this.undoButton = new JButton("Undo");
@@ -105,6 +126,46 @@ public class GameViewGUI extends View {
 		});
     	
     }
+    
+    
+    private void prepararBoxRegras () {
+    	
+    	this.rulesBox = new JComboBox<String>(chosenRules);
+    	this.rulesBox.setBounds(15, 57, 227, 27);
+    	this.rulesBox.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				String ruleName = chosenRules[rulesBox.getSelectedIndex()];
+				try {
+					
+					Class<?> ruleClass = Class.forName("br.unb.cic.lp.gol." + ruleName);
+					Rules rule = (Rules) ruleClass.newInstance();
+					getController().setRule(rule);
+					
+				} 
+				
+				catch (ClassNotFoundException e1) {
+					e1.printStackTrace();
+				} 
+				
+				catch (InstantiationException e1) {
+					e1.printStackTrace();
+				} 
+				
+				catch (IllegalAccessException e1) {
+					e1.printStackTrace();
+				}
+				
+			}
+			
+		});
+    	
+    	this.rulesBox.setSelectedIndex(0);
+    	
+    }
+    
     
     private void prepararBotaoHalt () {
     	
@@ -123,12 +184,14 @@ public class GameViewGUI extends View {
     	
     }
     
+    
     private void prepararGrid () {
     	
-    	this.grid = new CustomGrid(getController(), getEngine());
+    	this.grid = new CustomGrid(getController());
     	grid.setBounds(0, 100, 500, 500);
     	
     }
+    
     
     private void prepararPainelPrincipal () {
     	
@@ -136,10 +199,12 @@ public class GameViewGUI extends View {
     	this.mainPanel.setLayout(null);
     	this.mainPanel.add(this.nextGenerationButton);
     	this.mainPanel.add(this.undoButton);
+    	this.mainPanel.add(this.rulesBox);
     	this.mainPanel.add(this.haltButton);
     	this.mainPanel.add(this.grid);
        	
     }
+    
     
     private void mostrarJanela () {
     	
@@ -149,6 +214,7 @@ public class GameViewGUI extends View {
 	    this.frame.setVisible(true);
     	
     }
+    
     
     /*
      * Método para mostrar uma mensagem em nova janela,
