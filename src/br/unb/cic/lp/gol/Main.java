@@ -1,5 +1,9 @@
 package br.unb.cic.lp.gol;
 
+import br.unb.cic.lp.gol.controller.GameController;
+import br.unb.cic.lp.gol.model.GameEngine;
+import br.unb.cic.lp.gol.view.GameViewGUI;
+
 public class Main {
 
 	public static void main(String args[]) {

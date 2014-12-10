@@ -1,4 +1,6 @@
-package br.unb.cic.lp.gol;
+package br.unb.cic.lp.gol.view;
+
+import br.unb.cic.lp.gol.controller.Controller;
 
 public abstract class View {
 	

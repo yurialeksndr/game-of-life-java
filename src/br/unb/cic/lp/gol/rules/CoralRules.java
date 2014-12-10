@@ -1,4 +1,7 @@
-package br.unb.cic.lp.gol;
+package br.unb.cic.lp.gol.rules;
+
+import br.unb.cic.lp.gol.model.Model;
+
 
 /**
  * Essa implementacao utiliza o algoritmo Coral, ou seja:

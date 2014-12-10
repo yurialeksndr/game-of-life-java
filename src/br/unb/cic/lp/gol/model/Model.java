@@ -1,6 +1,9 @@
-package br.unb.cic.lp.gol;
+package br.unb.cic.lp.gol.model;
 
 import java.security.InvalidParameterException;
+
+import br.unb.cic.lp.gol.Statistics;
+import br.unb.cic.lp.gol.rules.Rules;
 
 public abstract class Model {
 	

@@ -1,9 +1,12 @@
-package br.unb.cic.lp.gol;
+package br.unb.cic.lp.gol.model;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+
+import br.unb.cic.lp.gol.Statistics;
+import br.unb.cic.lp.gol.rules.Rules;
 
 /**
  * Representa um ambiente (environment) do jogo GameOfLife.

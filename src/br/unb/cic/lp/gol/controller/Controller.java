@@ -1,4 +1,9 @@
-package br.unb.cic.lp.gol;
+package br.unb.cic.lp.gol.controller;
+
+import br.unb.cic.lp.gol.model.Model;
+import br.unb.cic.lp.gol.rules.Rules;
+import br.unb.cic.lp.gol.view.View;
+
 
 public abstract class Controller {
 	

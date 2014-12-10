@@ -1,4 +1,4 @@
-package br.unb.cic.lp.gol;
+package br.unb.cic.lp.gol.model;
 
 public class Cell {
 	

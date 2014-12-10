@@ -1,4 +1,7 @@
-package br.unb.cic.lp.gol;
+package br.unb.cic.lp.gol.rules;
+
+import br.unb.cic.lp.gol.model.Model;
+
 
 public class ConwayRules extends Rules {
 	

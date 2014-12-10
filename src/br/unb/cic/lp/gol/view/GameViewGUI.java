@@ -1,4 +1,4 @@
-package br.unb.cic.lp.gol;
+package br.unb.cic.lp.gol.view;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -9,6 +9,8 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import br.unb.cic.lp.gol.rules.Rules;
 
 
 public class GameViewGUI extends View {
@@ -140,7 +142,7 @@ public class GameViewGUI extends View {
 				String ruleName = chosenRules[rulesBox.getSelectedIndex()];
 				try {
 					
-					Class<?> ruleClass = Class.forName("br.unb.cic.lp.gol." + ruleName);
+					Class<?> ruleClass = Class.forName("br.unb.cic.lp.gol.rules." + ruleName);
 					Rules rule = (Rules) ruleClass.newInstance();
 					getController().setRule(rule);
 					
